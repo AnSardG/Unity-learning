@@ -12,6 +12,7 @@ public class MyTypes : MonoBehaviour
     public bool wetClothesKill = true;
     public bool lovingRelationship = false;
     public int myNumber = 2_147_483_647;
+    // uint means unsigned integer, no signs baby
     public uint anotherNumber = 2147483648;
     // public uint errorNumber = -1;
     public long reallyBigNumber = 9_223_372_036_854_775_807;
