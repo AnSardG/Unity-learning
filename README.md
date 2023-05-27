@@ -8,8 +8,7 @@
 Theses exercises are a series of Unity related tasks intended to help learn programming in C# from the beginning while also learning to use Unity for game development, 
 this is a side project kindly related to the grade I'm finishing (Web Application Development) so there won't be any specific goal, just learning a new language interactively.
 
-Expect messy stuff since I'm not uploading in a concrete order, neither I'm filtering between programs well done and written, and silly programs (might do in the future);
-also everything is on spanish since its my native tongue and the language used in classroom, for other projects I might surely keep it to english only.
+Expect messy stuff since I'm not uploading in a concrete order, neither I'm filtering between programs well done and written, and silly programs (might do in the future).
 
 ## How To Use These Exercises 
 
