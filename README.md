@@ -10,9 +10,10 @@ this is a side project kindly related to the grade I'm finishing (Web Applicatio
 
 Expect messy stuff since I'm not uploading in a concrete order, neither I'm filtering between programs well done and written, and silly programs (might do in the future).
 
-## How To Use These Exercises 
+## How To Use These Scripts
 
 1. Fork and clone this repository. To learn how to fork a repository, see the GitHub documentation on how to [fork a repo](https://docs.github.com/en/get-started/quickstart/fork-a-repo). 
     * Copies of repositories on your machine are called clones. If you need help cloning to your local environment you can learn how from the GitHub documentation on [cloning a repository](https://docs.github.com/en/github/creating-cloning-and-archiving-repositories/cloning-a-repository-from-github/cloning-a-repository).
 2. Go to any project directory and open the project file in your Unity-related IDE, like Rider from JetBrains. You can either open the file directly on a text editor like Notepad++ also.
-3. Do not submit your own solutions to this repo, as any PRs that do so will be closed without merging.
+3. In order to use these scripts you should copy them into your Unity project "Assets" and then using the right objects involved in the code.
+4. Do not submit your own solutions to this repo, as any PRs that do so will be closed without merging.
