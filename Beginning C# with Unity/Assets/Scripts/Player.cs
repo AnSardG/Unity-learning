@@ -2,7 +2,11 @@ namespace Beginning.CSharp
 {
     public struct Player
     {
-        public string Name;
-        public int Score, Lives;
+        private int lives;
+        public string Name { get; set; }
+        public int Score { get; set; }
+
+        public int Lives { get => lives; set => lives = ++value; }
+        
     }     
 }

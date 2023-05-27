@@ -4,7 +4,7 @@ using LearningObjects;
 public class MyStructs : MonoBehaviour
 {
     Player playerOne, playerTwo;
-    private Alien alienOne;
+    Alien alienOne;
     void Start()
     {
         playerOne = new Player();
@@ -13,6 +13,7 @@ public class MyStructs : MonoBehaviour
         playerOne.Name = "Barney";
         playerOne.Score = 100;
         playerOne.Lives = 3;
+        Debug.Log(playerOne.Lives);
         alienOne.HitPoints = 240;
         alienOne.Alive = true;
         alienOne.PointValue = 25;
