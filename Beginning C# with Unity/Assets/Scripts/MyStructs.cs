@@ -7,12 +7,9 @@ public class MyStructs : MonoBehaviour
     Alien alienOne;
     void Start()
     {
-        playerOne = new Player();
+        playerOne = new Player(3, "Barney", 100);
         playerTwo = new Player();
         alienOne = new Alien();
-        playerOne.Name = "Barney";
-        playerOne.Score = 100;
-        playerOne.Lives = 3;
         Debug.Log(playerOne.Lives);
         alienOne.HitPoints = 240;
         alienOne.Alive = true;
@@ -25,6 +22,7 @@ public class MyStructs : MonoBehaviour
         if (alienOne.Alive)
         {
             Debug.Log("There's an alien alive!");
+            alienOne.Fire();
         }
     }
 }
