@@ -1,3 +1,4 @@
+using Beginning.CSharp;
 using UnityEngine;
 
 namespace LearningObjects
@@ -19,6 +20,12 @@ namespace LearningObjects
             Debug.Log("The alien got shot.");
             PointValue--;
             Debug.Log("Alien's point value: " + PointValue);
+        }
+
+        public void Save()
+        {
+            PointValue = 100;
+            Debug.Log("Alien saved.");
         }
     }
 }

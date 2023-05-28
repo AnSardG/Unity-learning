@@ -7,10 +7,9 @@ public class MyStructs : MonoBehaviour
     Alien alienOne;
     void Start()
     {
-        playerOne = new Player(3, "Barney", 100);
+        playerOne = new Player();
         playerTwo = new Player();
         alienOne = new Alien();
-        Debug.Log(playerOne.Lives);
         alienOne.HitPoints = 240;
         alienOne.Alive = true;
         alienOne.PointValue = 25;
@@ -18,7 +17,7 @@ public class MyStructs : MonoBehaviour
 
     void OnDisable()
     {
-        Debug.Log("Name: "+playerOne.Name + ", score: "+playerOne.Score+", lives: "+playerOne.Lives);
+        Debug.Log("Name: "+playerOne.Name + ", score: "+playerOne.Score);
         if (alienOne.Alive)
         {
             Debug.Log("There's an alien alive!");
