@@ -1,6 +1,6 @@
 # Versions
 
-![Unity](https://img.shields.io/badge/UNITY-2021.3.26f1-lightgrey)
+![Unity](https://img.shields.io/badge/UNITY-2022.1.12-lightgrey)
 ![Rider](https://img.shields.io/badge/RIDER-2023.1.2-orange)
 
 # Unity-learning
