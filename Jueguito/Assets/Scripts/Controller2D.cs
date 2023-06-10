@@ -9,7 +9,7 @@ public class Controller2D : RaycastController
     float maxDescendAngle = 75;
     
     public CollisionInfo collisions;
-    Vector2 playerInput;
+    [HideInInspector] public Vector2 playerInput;
 
     public struct CollisionInfo
     {
@@ -58,7 +58,7 @@ public class Controller2D : RaycastController
             HorizontalCollisions(ref velocity);
         }
         if(velocity.y != 0)
-        {
+        {            
             VerticalCollisions(ref velocity);
         }         
         transform.Translate(velocity);
