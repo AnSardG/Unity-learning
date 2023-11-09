@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
+using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour
 {
@@ -11,6 +12,8 @@ public class PlayerController : MonoBehaviour
     Vector3 moveTo, move;
 
     //Public
+    public int health = 3;
+
     public float speed = 5f;    
     public float gravity = 20f;
     public float jumpForce = 15f;
@@ -25,6 +28,12 @@ public class PlayerController : MonoBehaviour
     }
 
     void Update()
+    {
+        MovePlayer();
+            
+    }
+    
+    void MovePlayer()
     {
         //Capturo inputs
         if (Input.GetKeyDown(KeyCode.LeftArrow) && currentLane != -1)
@@ -46,17 +55,42 @@ public class PlayerController : MonoBehaviour
         //Restamos la posición actual a la que nos queremos mover para no salirnos del límite
         move.x = (moveTo - transform.position).x * speed;
 
+        move = IsGrounded(move);
+
+        cc.Move(move * Time.deltaTime);
+    }
+    Vector3 IsGrounded(Vector3 move)
+    {
         if (!cc.isGrounded)
         {
             if (Input.GetKeyDown(KeyCode.DownArrow))
             {
                 move.y = -jumpForce;
-            } else
+            }
+            else
             {
                 move.y -= gravity * Time.deltaTime;
-            }            
+            }
         }
-
-        cc.Move(move * Time.deltaTime);
+        return move;
     }
+
+    private void OnControllerColliderHit(ControllerColliderHit hit)
+    {
+        Debug.Log("Hit detected with: " + hit.gameObject.name);
+
+        if (hit.gameObject.tag == "Enemy")
+        {
+            Debug.Log("Enemy hit!");
+            if (health > 0)
+            {
+                health--;
+                if (health <= 0)
+                {
+                    Time.timeScale = 0;
+                }
+            }
+        }
+    }
+
 }
