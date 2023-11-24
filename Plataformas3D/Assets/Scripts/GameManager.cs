@@ -10,12 +10,12 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
-        player.transform.position = playerSpawnPoint.transform.position;
-    }
-    
-    void Update()
+        RespawnPlayer();
+    }   
+
+    public void RespawnPlayer()
     {
-        
+        player.transform.position = playerSpawnPoint.transform.position;
     }
     
 }

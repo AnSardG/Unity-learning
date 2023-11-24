@@ -2,21 +2,33 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour
 {
     //References
     CharacterController characterController;
+    public GameObject gorrito, gameManager;
 
     //Public
     public float playerSpeed = 5f, jumpForce = 10f, gravity = 50f;
+
     public int health = 3;
-    
+    public int coinsEarned;
+
+    //Movement management
     Vector3 movement;
     float moveX, moveY, moveZ;    
     private int vecesSalto;
     float yHeight;
+
+    //Immunity management
+    bool immune = false;
+    public float immunityTime = 2f;
+
+    //Growth management;
+    bool grown = false;
+    public float grownTime = 2f;
 
     // Start is called before the first frame update
     void Start()
@@ -27,10 +39,16 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        RestartLevel(health <= 0);
+
         Move();
         Jump();
-
-        characterController.Move(movement * Time.deltaTime);
+        
+        //Powerups logic
+        ManageScale(grown);
+        gorrito.SetActive(immune);
+        
+        characterController.Move(movement * Time.deltaTime);        
     }
 
     private void Jump()
@@ -78,4 +96,70 @@ public class PlayerController : MonoBehaviour
 
     }
 
+    private void RestartLevel(bool isDead)
+    {
+        if (isDead && Input.GetKeyDown(KeyCode.R))
+        {            
+            SceneManager.LoadScene(0);            
+            Time.timeScale = 1;
+            gameManager.GetComponent<GameManager>().RespawnPlayer();
+        }
+    }
+
+    private void DeactivateImmunity()
+    {
+        immune = false;
+    }
+
+    private void DeactivateGrowth()
+    {
+        grown = false;
+    }
+
+    private void ManageScale(bool grown)
+    {
+        if (grown)
+        {
+            transform.localScale = Vector3.Lerp(transform.localScale, Vector3.one * 2, Time.deltaTime * grownTime);
+        }
+        else
+        {
+            transform.localScale = Vector3.Lerp(transform.localScale, Vector3.one, Time.deltaTime * grownTime);
+        }
+    }
+
+
+    //Public Methods
+    public void TakeDamage(int dmg)
+    {
+        if (!immune)
+        {
+            health -= dmg;
+
+            if (health <= 0)
+            {
+                Time.timeScale = 0;
+            }
+        }        
+    }
+
+    public void EarnCoins(int coinValue)
+    {
+        coinsEarned += coinValue;
+    }
+
+    public void Immunity()
+    {
+        immune = true;
+
+        Invoke("DeactivateImmunity", immunityTime);
+    }
+
+    public void GrowUp()
+    {
+        grown = true;
+
+        Invoke("DeactivateGrowth", grownTime);
+    }
+    
 }
