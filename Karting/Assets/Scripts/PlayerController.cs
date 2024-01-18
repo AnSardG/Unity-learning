@@ -6,12 +6,15 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     //VARS
-    float horizontal, vertical, speed;
+    float horizontal, vertical, speed, aceleracionOriginal;
+    bool slowed;
     Vector3 rot;
 
     //PUBLIC
-    public float rotationSpeed = 0.5f, aceleracion, desaceleracion;
+    public float rotationSpeed = 0.5f, aceleracion, desaceleracion, slowQnty;
     public int playerNumber;
+    public Transform firePointPosition;
+    public GameObject projectilePrefab;
 
     //REFERENCES
     Rigidbody rb;
@@ -21,12 +24,39 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody>();
+        aceleracionOriginal = aceleracion;
     }
     
     void Update()
     {
         GetHorizontalInput();
         GetVerticalInput();
+        GetFireInput();
+        CheckSlows();
+
+        
+    }
+
+    private void GetFireInput()
+    {
+        if (playerNumber == 1)
+        {
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                Instantiate(projectilePrefab, firePointPosition.transform.position, firePointPosition.transform.rotation);
+            }
+        } else
+        {
+            if (Input.GetKeyDown(KeyCode.Mouse0))
+            {
+                Instantiate(projectilePrefab, firePointPosition.transform.position, firePointPosition.transform.rotation);
+            }
+        }
+    }
+
+    private void CheckSlows()
+    {
+        aceleracion = slowed ? Mathf.Lerp(aceleracion, slowQnty, 2f) : aceleracionOriginal;        
     }
 
     void FixedUpdate()
@@ -34,7 +64,6 @@ public class PlayerController : MonoBehaviour
         if(Math.Abs(speed) > 0)
         {
             rb.AddForce(transform.forward * speed);
-
 
             if(speed > 0)
             {
@@ -50,16 +79,21 @@ public class PlayerController : MonoBehaviour
     {
         speed = 0;
         vertical = Input.GetAxis("Vertical" + playerNumber) ;
-        speed = vertical > 0 ? aceleracion * vertical : desaceleracion * vertical;
 
-        //if(vertical > 0 )
-        //{ 
-        //    speed = aceleracion * vertical;
-        //} else
-        //{
-        //    speed = desaceleracion * vertical;
-        //}
-
+        if(vertical > 0)
+        {
+            if (slowed)
+            {
+                speed = slowQnty * vertical;
+            } else
+            {
+                speed = aceleracion * vertical;
+            }
+        } else
+        {
+            speed = desaceleracion * vertical;
+        }
+        
     }
 
     private void GetHorizontalInput()
@@ -70,5 +104,16 @@ public class PlayerController : MonoBehaviour
         newRot = horizontal * rotationSpeed;
         rot = new Vector3(0f, newRot, 0f);
 
+    }
+
+    public void SlowPlayer()
+    {
+        slowed = true;
+        Invoke("StopSlow", 3f);
+    }
+
+    private void StopSlow()
+    {
+        slowed = false;
     }
 }
