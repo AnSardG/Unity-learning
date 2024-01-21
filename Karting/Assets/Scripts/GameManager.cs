@@ -38,7 +38,7 @@ public class GameManager : MonoBehaviour
     private void CheckLaps()
     {
         int i = 0;
-        Debug.Log("Laps J1: " + playerLaps[0] + ". Laps J2: " + playerLaps[1]);
+        
         while (!gameOver && i < playerLaps.Length)
         {            
             gameOver = playerLaps[i] >= maxLaps;

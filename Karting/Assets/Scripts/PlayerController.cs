@@ -6,15 +6,15 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     //VARS
-    float horizontal, vertical, speed, aceleracionOriginal;
-    bool slowed;
+    float horizontal, vertical, speed, aceleracionOriginal, speedBoosted, timePassed;
+    bool slowed, boosted, canFire;
     Vector3 rot;
 
     //PUBLIC
-    public float rotationSpeed = 0.5f, aceleracion, desaceleracion, slowQnty;
+    public float rotationSpeed = 0.5f, aceleracion, desaceleracion, slowQnty, fireRate = .5f;
     public int playerNumber;
     public Transform firePointPosition;
-    public GameObject projectilePrefab;
+    public GameObject projectilePrefab;    
 
     //REFERENCES
     Rigidbody rb;
@@ -39,18 +39,17 @@ public class PlayerController : MonoBehaviour
 
     private void GetFireInput()
     {
-        if (playerNumber == 1)
+        timePassed += Time.deltaTime;               
+
+        canFire = timePassed >= fireRate;
+
+        if (canFire 
+            && (playerNumber == 1 && Input.GetKeyDown(KeyCode.Space) 
+            || playerNumber == 2 && Input.GetKeyDown(KeyCode.Mouse0)))
         {
-            if (Input.GetKeyDown(KeyCode.Space))
-            {
-                Instantiate(projectilePrefab, firePointPosition.transform.position, firePointPosition.transform.rotation);
-            }
-        } else
-        {
-            if (Input.GetKeyDown(KeyCode.Mouse0))
-            {
-                Instantiate(projectilePrefab, firePointPosition.transform.position, firePointPosition.transform.rotation);
-            }
+            timePassed = 0;
+
+            Instantiate(projectilePrefab, firePointPosition.transform.position, firePointPosition.transform.rotation);                       
         }
     }
 
@@ -63,7 +62,13 @@ public class PlayerController : MonoBehaviour
     {
         if(Math.Abs(speed) > 0)
         {
-            rb.AddForce(transform.forward * speed);
+            if (!boosted)
+            {
+                rb.AddForce(transform.forward * speed);
+            } else
+            {
+                rb.AddForce(transform.forward * speedBoosted);
+            }            
 
             if(speed > 0)
             {
@@ -115,5 +120,17 @@ public class PlayerController : MonoBehaviour
     private void StopSlow()
     {
         slowed = false;
+    }
+
+    public void BoostSpeed(float boost)
+    {
+        boosted = true;
+        speedBoosted = boost;
+        Invoke("ResetBoost", .5f);
+    }
+
+    private void ResetBoost()
+    {
+        boosted = false;
     }
 }
