@@ -5,14 +5,14 @@ using UnityEngine;
 public class Projectile : MonoBehaviour
 {
     public float speed = 1f;
-
-    private bool rotated = false;
-    private string direction = "up";
+    private string direction;
 
     // Start is called before the first frame update
     void Start()
     {
         Destroy(gameObject, 3f);
+        SetDirection();
+        Debug.Log(direction);
     }
 
     // Update is called once per frame
@@ -20,58 +20,47 @@ public class Projectile : MonoBehaviour
     {
         MoveTo();
     }
-
     private void MoveTo()
+    {
+        transform.position += GetDirectionVector() * Time.deltaTime * speed;
+    }
+
+    private void SetDirection()
+    {
+        Vector3 eulerRotation = transform.rotation.eulerAngles;
+
+        if (Mathf.Approximately(eulerRotation.z, 90f))
+        {
+            direction = "left";
+        }
+        else if (Mathf.Approximately(eulerRotation.z, 270f))
+        {
+            direction = "right";
+        }
+        else if (Mathf.Approximately(eulerRotation.z, 180f))
+        {
+            direction = "down";
+        }
+        else
+        {
+            direction = "up";
+        }
+    }    
+
+    private Vector3 GetDirectionVector()
     {
         switch (direction)
         {
             case "left":
-                if (!rotated)
-                {
-                    transform.position = new Vector3(transform.position.x, transform.position.y, 90f);
-                    rotated = true;
-                } else
-                {
-                    transform.position += Vector3.left * Time.deltaTime * speed;
-                }
-                break;
+                return Vector3.left;
             case "right":
-                if (!rotated)
-                {
-                    transform.position = new Vector3(transform.position.x, transform.position.y, -90f);
-                    rotated = true;
-                }
-                else
-                {
-                    transform.position += Vector3.right * Time.deltaTime * speed;
-                }
-                break;
+                return Vector3.right;
             case "up":
-                if (!rotated)
-                {                    
-                    rotated = true;
-                }
-                else
-                {
-                    transform.position += Vector3.up * Time.deltaTime * speed;
-                }
-                break;
+                return Vector3.up;
             case "down":
-                if (!rotated)
-                {
-                    transform.position = new Vector3(transform.position.x, transform.position.y, 180f);
-                    rotated = true;
-                }
-                else
-                {
-                    transform.position += Vector3.down * Time.deltaTime * speed;
-                }
-                break;
+                return Vector3.down;
+            default:
+                return Vector3.up; // Default to up direction if direction is not recognized
         }
-    }
-
-    public void SetDirection(string direction)
-    {
-        this.direction = direction;
     }
 }
