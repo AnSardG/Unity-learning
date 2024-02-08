@@ -6,13 +6,13 @@ public class Projectile : MonoBehaviour
 {
     public float speed = 1f;
     private string direction;
+    private int damage;
 
     // Start is called before the first frame update
     void Start()
     {
-        Destroy(gameObject, 3f);
+        Destroy(gameObject, 2f);
         SetDirection();
-        Debug.Log(direction);
     }
 
     // Update is called once per frame
@@ -20,6 +20,17 @@ public class Projectile : MonoBehaviour
     {
         MoveTo();
     }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        Destroy(gameObject);
+        
+        if(collision.tag == "Enemy")
+        {
+            collision.gameObject.GetComponent<Enemy>().TakeDamage(damage);
+        }
+    }
+
     private void MoveTo()
     {
         transform.position += GetDirectionVector() * Time.deltaTime * speed;
@@ -62,5 +73,10 @@ public class Projectile : MonoBehaviour
             default:
                 return Vector3.up; // Default to up direction if direction is not recognized
         }
+    }
+
+    public void SetDamage(int dmg)
+    {
+        damage = dmg;
     }
 }

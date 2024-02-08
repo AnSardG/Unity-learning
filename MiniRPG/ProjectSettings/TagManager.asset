@@ -8,6 +8,8 @@ TagManager:
   - Right
   - Up
   - Down
+  - Enemy
+  - Arrow
   layers:
   - Default
   - TransparentFX

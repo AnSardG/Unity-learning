@@ -27,7 +27,7 @@ public class PlayerController : MonoBehaviour
 
     // PUBLIC VARS
     public float speed = 10f, fireArrowCd = 2f, stepInterval = 1f, stepCooldown = 1f;
-    public int health = 3;
+    public int health = 3, arrowDamage = 1;
     public CollisionChecker cCheck;
 
     // Objeto donde guardamos las colisiones con paredes del personaje.
@@ -189,6 +189,7 @@ public class PlayerController : MonoBehaviour
         {
             time = 0;
             Instantiate(arrow, firePointPosition.transform.position, ManageArrowDirection());
+            GameObject.FindWithTag("Arrow").GetComponent<Projectile>().SetDamage(arrowDamage);
         }        
     }    
 }
