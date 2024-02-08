@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -13,9 +14,11 @@ public class Enemy : MonoBehaviour
 
     // REFERENCES
     public Transform waypointA, waypointB;
+    public Animator anim;
 
     // Private VARS
     private Transform objetivo;
+    private bool alive = true;
 
     
     void Start()
@@ -27,7 +30,7 @@ public class Enemy : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(tipoEnemigo == TipoEnemigo.Movil)
+        if(tipoEnemigo == TipoEnemigo.Movil && alive)
         {
             // Calcular la dirección y la distancia hacia el objetivo
             Vector3 direccion = (objetivo.position - transform.position).normalized;
@@ -39,7 +42,7 @@ public class Enemy : MonoBehaviour
             if (Vector3.Distance(transform.position, objetivo.position) <= 0.1f)
             {
                 CambiarObjetivo();
-            }
+            }            
         }
     }
 
@@ -60,6 +63,13 @@ public class Enemy : MonoBehaviour
         {
             objetivo = waypointA;
         }
+        CheckAnimation();
+    }
+
+    private void CheckAnimation()
+    {
+        anim.SetBool("MovingDown", waypointB == objetivo);
+        anim.SetBool("MovingUp", waypointA == objetivo);
     }
 
     public void TakeDamage(int dmg)
@@ -68,8 +78,16 @@ public class Enemy : MonoBehaviour
 
         if (enemyHealth < 1)
         {
-            Destroy(gameObject);
-            Destroy(transform.parent.gameObject);
+            alive = false;
+            Invoke("DestroyEnemyObject", 2f);
+            anim.SetTrigger("Die");
+            gameObject.GetComponent<BoxCollider2D>().enabled = false;
         }
+    }
+
+    private void DestroyEnemyObject()
+    {
+        Destroy(gameObject);
+        Destroy(transform.parent.gameObject);
     }
 }

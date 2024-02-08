@@ -47,4 +47,14 @@ public class GameManager : MonoBehaviour
     {
         return pistas;
     }
+
+    public void PauseScene()
+    {
+        Time.timeScale = 0;
+    }
+
+    public void UnpauseScene()
+    {
+        Time.timeScale = 1;
+    }
 }
