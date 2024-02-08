@@ -2,14 +2,16 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour
 {
     //PRIVATE VARS
     float vertical, horizontal, time, elapsedTime, stepTime;
-    bool canFire, canMove = true, isMoving;
+    bool canFire, canMove = true, isMoving, dead = false, attacking = false;
     private DirectionChecker dCheck;
     private Vector3 targetPosition;
+    private int maxHealth;    
 
     // Objeto donde guardamos la dirección a la que está mirando el personaje.
     private struct DirectionChecker
@@ -23,11 +25,11 @@ public class PlayerController : MonoBehaviour
             left = false;
             right = false;
         }
-    }
+    }    
 
     // PUBLIC VARS
     public float speed = 10f, fireArrowCd = 2f, stepInterval = 1f, stepCooldown = 1f;
-    public int health = 3, arrowDamage = 1;
+    public int health = 3, arrowDamage = 1, moneyEarned;
     public CollisionChecker cCheck;
 
     // Objeto donde guardamos las colisiones con paredes del personaje.
@@ -46,22 +48,100 @@ public class PlayerController : MonoBehaviour
 
     //REFERENCES
     public GameObject arrow, firePointPosition;
+    public Animator anim;
 
+    //PRIVATE Methods
     
     void Start()
     {
         dCheck.ResetDirections();
         dCheck.up = true;
+        maxHealth = health;
         targetPosition = transform.position;
-    }
+    }    
 
-    
     void Update()
     {
-        Move();
-        ChangeDirectionChecker();
-        CheckCooldowns();
-        GetFireInput();
+        if (!dead)
+        {
+            Move();            
+            ChangeDirectionChecks();
+            ManageAnimations();
+            CheckCooldowns();
+            GetFireInput();            
+        } else if (Input.GetKeyDown(KeyCode.R))
+        {
+            Time.timeScale = 1;
+            SceneManager.LoadScene(0);            
+        }
+    }
+
+    private void ManageAnimations(bool attack = false)
+    {
+        if (attack)
+        {
+            attacking = true;
+
+            ResetAllIdleAnim();
+            ResetAllRunAnim();
+
+            if (dCheck.up)
+            {
+                anim.SetTrigger("AttackUp");
+            }
+            else if (dCheck.down)
+            {
+                anim.SetTrigger("AttackDown");
+            }
+            else if (dCheck.right)
+            {
+                anim.SetTrigger("AttackRight");
+            }
+            else if (dCheck.left)
+            {
+                anim.SetTrigger("AttackLeft");
+            }
+
+            Invoke("ResetAttackTrigger", 1f);
+        }
+
+        if (vertical == 0 && horizontal == 0)
+        {
+            ResetAllRunAnim();
+            anim.SetBool("IdleUp", dCheck.up);
+            anim.SetBool("IdleDown", dCheck.down);
+            anim.SetBool("IdleRight", dCheck.right);
+            anim.SetBool("IdleLeft", dCheck.left);            
+        } else
+        {
+            ResetAllIdleAnim();
+            anim.SetBool("MovingUp", dCheck.up);
+            anim.SetBool("MovingDown", dCheck.down);
+            anim.SetBool("MovingRight", dCheck.right);
+            anim.SetBool("MovingLeft", dCheck.left);            
+        }        
+    }
+
+    private void ResetAllIdleAnim()
+    {
+        anim.SetBool("IdleDown", false);
+        anim.SetBool("IdleUp", false);
+        anim.SetBool("IdleRight", false);
+        anim.SetBool("IdleLeft", false);
+    }
+
+    private void ResetAllRunAnim()
+    {
+        anim.SetBool("MovingDown", false);
+        anim.SetBool("MovingUp", false);
+        anim.SetBool("MovingRight", false);
+        anim.SetBool("MovingLeft", false);
+    }    
+
+    private void ResetAttackTrigger()
+    {
+        anim.SetTrigger("StopAttack");
+        attacking = false;
     }
 
     private void CheckCooldowns()
@@ -77,7 +157,7 @@ public class PlayerController : MonoBehaviour
         vertical = Input.GetAxis("Vertical");
         horizontal = Input.GetAxis("Horizontal");
 
-        if (!isMoving && canMove)
+        if (!isMoving && canMove && !attacking)
         {
             stepTime = 0;
             // Fijamos la posición objetivo dependiendo del input y las colisiones.
@@ -98,7 +178,7 @@ public class PlayerController : MonoBehaviour
                 targetPosition += Vector3.left * speed * Time.deltaTime;
             }
 
-            // Comenzamos a mover al personaje is la dirección objetivo se ha visto modificada en relación a la posición del personaje.
+            // Comenzamos a mover al personaje si la dirección objetivo se ha visto modificada en relación a la posición del personaje.
             if (transform.position != targetPosition)
             {
                 isMoving = true;
@@ -120,7 +200,7 @@ public class PlayerController : MonoBehaviour
         }
     }    
 
-    private void ChangeDirectionChecker()
+    private void ChangeDirectionChecks()
     {
         // Solo se reinician las direcciones si hay algún movimiento
         if (horizontal != 0 || vertical != 0)
@@ -188,8 +268,43 @@ public class PlayerController : MonoBehaviour
         if (Input.GetAxis("Fire1") > 0 && canFire)
         {
             time = 0;
-            Instantiate(arrow, firePointPosition.transform.position, ManageArrowDirection());
-            GameObject.FindWithTag("Arrow").GetComponent<Projectile>().SetDamage(arrowDamage);
+            ManageAnimations(true);
+            Invoke("FireArrow", .4f);                  
         }        
     }    
+
+    private void FireArrow()
+    {
+        Instantiate(arrow, firePointPosition.transform.position, ManageArrowDirection());
+        GameObject.FindWithTag("Arrow").GetComponent<Projectile>().SetDamage(arrowDamage);
+    }
+
+
+    //PUBLIC Methods
+    public void TakeDamage(int dmg)
+    {
+        health -= dmg;
+        if(health < 1)
+        {
+            Time.timeScale = 0;
+            dead = true;
+        }
+    }
+
+    public void Heal(int hpRestorage)
+    {
+        if(health < maxHealth)
+        {
+            health += hpRestorage;            
+            while(health > maxHealth)
+            {
+                health--;
+            }
+        }
+    }
+
+    internal void EarnMoney(int coinValue)
+    {
+        moneyEarned += coinValue;
+    }
 }

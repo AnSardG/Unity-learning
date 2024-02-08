@@ -43,6 +43,13 @@ public class Enemy : MonoBehaviour
         }
     }
 
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.tag == "Player")
+        {
+            collision.gameObject.GetComponent<PlayerController>().TakeDamage(enemyDamage);
+        }
+    }
     void CambiarObjetivo()
     {
         if (objetivo == waypointA)
