@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class Collectable : MonoBehaviour
 {
-    public enum CollectableType { Heart, Coin }
+    public enum CollectableType { Heart, Coin, Item }
     public CollectableType collectableType = CollectableType.Heart;
-    public int hpRestorage = 1;
+    public int hpRestorage = 1, itemId;
     public int coinValue = 10;
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -20,7 +20,12 @@ public class Collectable : MonoBehaviour
             } else if (collectableType == CollectableType.Coin)
             {
                 collision.gameObject.GetComponent<PlayerController>().EarnMoney(coinValue);
+            } else if (collectableType == CollectableType.Item)
+            {
+                GameManager.instance.DesbloquearPista(itemId);
+                Destroy(gameObject);
             }
+
         }
     }
 }

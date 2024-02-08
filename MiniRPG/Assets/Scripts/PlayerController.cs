@@ -58,13 +58,21 @@ public class PlayerController : MonoBehaviour
         dCheck.up = true;
         maxHealth = health;
         targetPosition = transform.position;
-    }    
+    }
+
+    private void FixedUpdate()
+    {
+        if (!dead)
+        {
+            
+        }
+    }
 
     void Update()
     {
         if (!dead)
         {
-            Move();            
+            Move();
             ChangeDirectionChecks();
             ManageAnimations();
             CheckCooldowns();
