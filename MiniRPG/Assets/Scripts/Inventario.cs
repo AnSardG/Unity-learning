@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class Inventario : MonoBehaviour
 {
-    public Button[] botonesPistas;
+    public Button[] itemButtons;
 
     void Start()
     {
@@ -15,15 +15,15 @@ public class Inventario : MonoBehaviour
 
     private void OnEnable()
     {
-        bool[] pistas = GameManager.instance.GetPistas();
+        bool[] items = GameManager.instance.GetItems();
 
         try
         {
-            for (int i = 0; i < botonesPistas.Length; i++)
+            for (int i = 0; i < itemButtons.Length; i++)
             {
-                if (pistas[i])
+                if (items[i])
                 {
-                    botonesPistas[i].interactable = true;
+                    itemButtons[i].interactable = true;
                 }
             }
         }

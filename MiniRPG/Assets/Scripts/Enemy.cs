@@ -10,7 +10,7 @@ public class Enemy : MonoBehaviour
 
     public TipoEnemigo tipoEnemigo;
     public int enemyHealth, enemyDamage;
-    public float velocidad = .2f;
+    public float velocidad = .2f, damageInterval = 2f;
 
     // REFERENCES
     public Transform waypointA, waypointB;
@@ -19,6 +19,7 @@ public class Enemy : MonoBehaviour
     // Private VARS
     private Transform objetivo;
     private bool alive = true;
+    private float time;
 
     
     void Start()
@@ -30,6 +31,8 @@ public class Enemy : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        time += Time.deltaTime;
+
         if(tipoEnemigo == TipoEnemigo.Movil && alive)
         {
             // Calcular la dirección y la distancia hacia el objetivo
@@ -50,7 +53,11 @@ public class Enemy : MonoBehaviour
     {
         if (collision.gameObject.tag == "Player")
         {
-            collision.gameObject.GetComponent<PlayerController>().TakeDamage(enemyDamage);
+            if(time >= damageInterval)
+            {
+                collision.gameObject.GetComponent<PlayerController>().TakeDamage(enemyDamage);
+                time = 0;
+            }            
         }
     }
     void CambiarObjetivo()
@@ -75,13 +82,16 @@ public class Enemy : MonoBehaviour
     public void TakeDamage(int dmg)
     {
         enemyHealth -= dmg;
-
+        
         if (enemyHealth < 1)
         {
             alive = false;
             Invoke("DestroyEnemyObject", 2f);
             anim.SetTrigger("Die");
             gameObject.GetComponent<BoxCollider2D>().enabled = false;
+        } else
+        {
+            anim.SetTrigger("Damaged");
         }
     }
 

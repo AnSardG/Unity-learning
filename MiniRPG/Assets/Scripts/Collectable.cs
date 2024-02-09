@@ -22,7 +22,7 @@ public class Collectable : MonoBehaviour
                 collision.gameObject.GetComponent<PlayerController>().EarnMoney(coinValue);
             } else if (collectableType == CollectableType.Item)
             {
-                GameManager.instance.DesbloquearPista(itemId);
+                GameManager.instance.UnlockItem(itemId);
                 Destroy(gameObject);
             }
 

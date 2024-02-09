@@ -58,6 +58,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6296018419260162599}
   - component: {fileID: 1888351023097427559}
+  - component: {fileID: 7079881118388247244}
   m_Layer: 0
   m_Name: MovingEnemyArt
   m_TagString: Untagged
@@ -132,6 +133,27 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!95 &7079881118388247244
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3829620123182890990}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 038768453965efc4f94c8539e2a0b651, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &4327002917105314151
 GameObject:
   m_ObjectHideFlags: 0
@@ -252,11 +274,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tipoEnemigo: 1
-  enemyHealth: 10
-  enemyDamage: 3
+  enemyHealth: 4
+  enemyDamage: 1
   velocidad: 30
+  damageInterval: 2
   waypointA: {fileID: 4428900897529614497}
   waypointB: {fileID: 845145210096071348}
+  anim: {fileID: 7079881118388247244}
 --- !u!1 &6668112602697652388
 GameObject:
   m_ObjectHideFlags: 0

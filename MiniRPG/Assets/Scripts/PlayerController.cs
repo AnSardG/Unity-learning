@@ -10,6 +10,7 @@ public class PlayerController : MonoBehaviour
     float vertical, horizontal, time, elapsedTime, stepTime;
     bool canFire, canMove = true, isMoving, dead = false, attacking = false;
     private DirectionChecker dCheck;
+    private Vectors vectors;
     private Vector3 targetPosition;
     private int maxHealth;    
 
@@ -25,7 +26,20 @@ public class PlayerController : MonoBehaviour
             left = false;
             right = false;
         }
-    }    
+    }   
+    
+    private struct Vectors
+    {
+        public Vector3 left, right, up, down;
+
+        public void __Vectors()
+        {
+            left = Vector3.left;
+            right = Vector3.right;
+            up = Vector3.up;
+            down = Vector3.down;
+        }
+    }
 
     // PUBLIC VARS
     public float speed = 10f, fireArrowCd = 2f, stepInterval = 1f, stepCooldown = 1f;
@@ -55,6 +69,7 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         dCheck.ResetDirections();
+        vectors.__Vectors();
         dCheck.up = true;
         maxHealth = health;
         targetPosition = transform.position;
@@ -64,17 +79,17 @@ public class PlayerController : MonoBehaviour
     {
         if (!dead)
         {
-            
-        }
+            Move();
+            ChangeDirectionChecks();
+            ManageAnimations();
+        }        
     }
 
     void Update()
     {
         if (!dead)
-        {
-            Move();
-            ChangeDirectionChecks();
-            ManageAnimations();
+        {                        
+            
             CheckCooldowns();
             GetFireInput();            
         } else if (Input.GetKeyDown(KeyCode.R))
@@ -171,19 +186,19 @@ public class PlayerController : MonoBehaviour
             // Fijamos la posición objetivo dependiendo del input y las colisiones.
             if (vertical > 0 && !cCheck.up)
             {
-                targetPosition += Vector3.up * speed * Time.deltaTime;
+                targetPosition += vectors.up * speed * Time.deltaTime;
             }
             else if (vertical < 0 && !cCheck.down)
             {
-                targetPosition += Vector3.down * speed * Time.deltaTime;
+                targetPosition += vectors.down * speed * Time.deltaTime;
             }
             else if (horizontal > 0 && !cCheck.right)
             {
-                targetPosition += Vector3.right * speed * Time.deltaTime ;
+                targetPosition += vectors.right * speed * Time.deltaTime ;
             }
             else if (horizontal < 0 && !cCheck.left)
             {
-                targetPosition += Vector3.left * speed * Time.deltaTime;
+                targetPosition += vectors.left * speed * Time.deltaTime;
             }
 
             // Comenzamos a mover al personaje si la dirección objetivo se ha visto modificada en relación a la posición del personaje.
