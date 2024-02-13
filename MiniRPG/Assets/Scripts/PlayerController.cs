@@ -9,13 +9,13 @@ public class PlayerController : MonoBehaviour
     //PRIVATE VARS
     float vertical, horizontal, time, elapsedTime, stepTime;
     bool canFire, canMove = true, isMoving, dead = false, attacking = false;
-    private DirectionChecker dCheck;
+    public DirectionChecker dCheck;
     private Vectors vectors;
     private Vector3 targetPosition;
     private int maxHealth;    
 
     // Objeto donde guardamos la dirección a la que está mirando el personaje.
-    private struct DirectionChecker
+    public struct DirectionChecker
     {
         public bool up, down, left, right;
         
@@ -88,8 +88,7 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
         if (!dead)
-        {                        
-            
+        {
             CheckCooldowns();
             GetFireInput();            
         } else if (Input.GetKeyDown(KeyCode.R))

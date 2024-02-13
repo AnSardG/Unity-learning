@@ -98,6 +98,9 @@ public class Enemy : MonoBehaviour
     private void DestroyEnemyObject()
     {
         Destroy(gameObject);
-        Destroy(transform.parent.gameObject);
+        if(tipoEnemigo == TipoEnemigo.Movil)
+        {
+            Destroy(transform.parent.gameObject);
+        }        
     }
 }
