@@ -23,7 +23,11 @@ public class Projectile : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        Destroy(gameObject);
+        if(collision.tag != "Heart" && collision.tag != "Coin")
+        {
+            Destroy(gameObject);
+        }
+        
         
         if(collision.tag == "Enemy")
         {

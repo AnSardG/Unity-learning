@@ -10,6 +10,8 @@ TagManager:
   - Down
   - Enemy
   - Arrow
+  - Coin
+  - Heart
   layers:
   - Default
   - TransparentFX
